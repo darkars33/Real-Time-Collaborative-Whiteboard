@@ -159,9 +159,9 @@ const Whiteboard = () => {
     currentShapeId.current = undefined;
   };
 
-  const handleClick = (e) =>{
-    if(action !== "cursor") return;
-    const target= e.currentTarget;
+  const handleClick = (e: any) => {
+    if (action !== "cursor") return;
+    const target = e.currentTarget;
     transformerRef.current.nodes([target]);
   }
 
