@@ -176,7 +176,7 @@ const Whiteboard = () => {
   };
 
   return (
-    <div className="vw-100 vh-100 p-2  position-relative d-flex justify-content-center align-items-start">
+    <div className="vw-100 vh-100 p-2  position-relative d-flex justify-content-center align-items-start overflow-hidden">
       <div
         className="p-md-4 bg-transparent"
         style={{ position: "fixed", top: "20px", zIndex: 10 }}
@@ -251,7 +251,6 @@ const Whiteboard = () => {
         ref={stageRef}
         width={window.innerWidth}
         height={window.innerHeight}
-        className=""
         onPointerMove={onPointerMove}
         onPointerDown={onPointerDown}
         onPointerUp={onPointerUp}
