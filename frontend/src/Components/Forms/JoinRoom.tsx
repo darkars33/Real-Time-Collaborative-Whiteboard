@@ -1,29 +1,72 @@
-import React from 'react'
+import React, { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import { useNavigate } from 'react-router-dom';
 
-const JoinRoom = () => {
-  return (
-          <form className="form col-md-12 mt-5">
-          <div className="form-group">
-            <input
-              type="text"
-              className="form-control my-2"
-              placeholder="Enter your name"
-            />
-          </div>
-          <div className="form-group">
-            <div className="input-group d-flex align-items-center justify-content-center">
-              <input
-                type="text"
-                className="form-control my-2"
-                placeholder="Enter room code"
-              />
-            </div>
-          </div>
-          <button type="submit" className="mt-4 btn-primary btn-block form-control">
-              Join Room
-          </button>
-        </form>
-  )
+interface JoinRoomProps {
+  socket: any; 
+  setUser: (user: User) => void;
 }
 
-export default JoinRoom
+interface User {
+  name: string;
+  roomId: string;
+  userId: string;
+  host: boolean;
+  presenter: boolean;
+}
+
+const JoinRoom: React.FC<JoinRoomProps> = ({ socket, setUser }) => {
+  const [roomId, setRoomId] = useState<string>("");
+  const [name, setName] = useState<string>("");
+
+  const navigate = useNavigate();
+
+  const handleRoomJoin = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const roomData: User = {
+      name,
+      roomId,
+      userId: uuidv4(),
+      host: false,
+      presenter: false,
+    };
+
+    setUser(roomData);
+    navigate(`/${roomId}`);
+    socket.emit("userJoined", roomData);
+  };
+
+  return (
+    <form className="form col-md-12 mt-5" onSubmit={handleRoomJoin}>
+      <div className="form-group">
+        <input
+          type="text"
+          className="form-control my-2"
+          placeholder="Enter your name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+      </div>
+      <div className="form-group">
+        <div className="input-group d-flex align-items-center justify-content-center">
+          <input
+            type="text"
+            className="form-control my-2"
+            placeholder="Enter room code"
+            value={roomId}
+            onChange={(e) => setRoomId(e.target.value)}
+          />
+        </div>
+      </div>
+      <button
+        type="submit"
+        className="mt-4 btn-primary btn-block form-control"
+      >
+        Join Room
+      </button>
+    </form>
+  );
+};
+
+export default JoinRoom;

@@ -1,30 +1,47 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from 'uuid';
 
-const CreateRoom = ({uniqueId, socket, setUser}) => {
+interface CreateRoomProps {
+  uniqueId: string;
+  socket: any; 
+  setUser: (user: RoomData) => void;
+}
 
-          const [roomId, setRoomId] = useState(uniqueId);
-          const [name, setName] = useState("");
+interface RoomData {
+  name: string;
+  roomId: string;
+  userId: string;
+  host: boolean;
+  presenter: boolean;
+}
 
-          const handleCreateRoom = (e:any) =>{
-                    e.preventDefault();
+const CreateRoom: React.FC<CreateRoomProps> = ({ uniqueId, socket, setUser }) => {
+  const uniId= uuidv4();
+  const [roomId, setRoomId] = useState<string>(uuidv4());
+  const [name, setName] = useState<string>("");
+  const navigate = useNavigate();
+  
 
-                    const roomData = {
-                          name,
-                          roomId,
-                          userId: uniqueId,
-                          host: true,
-                          presenter: true  
-                    }
 
-                    console.log(roomData)
+  const handleCreateRoom = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-                    setUser(roomData);
-
-                    socket.emit("userJoined", roomData);
-          }
+    const roomData: RoomData = {
+      name,
+      roomId,
+      userId: uuidv4(),
+      host: true,
+      presenter: true,
+    };
+    console.log(roomData)
+    setUser(roomData);
+    navigate(`/${roomId}`)
+    socket.emit("userJoined", roomData);
+  };
 
   return (
-    <form className="form col-md-12 mt-5">
+    <form className="form col-md-12 mt-5" onSubmit={handleCreateRoom}>
       <div className="form-group">
         <input
           type="text"
@@ -44,15 +61,21 @@ const CreateRoom = ({uniqueId, socket, setUser}) => {
             value={roomId}
           />
           <div className="input-group-append d-flex gap-1">
-            <button className="btn btn-primary btn-sm" type="button" onClick={() => setRoomId(uniqueId)}>
+            <button
+              className="btn btn-primary btn-sm"
+              type="button"
+              onClick={() => setRoomId(uuidv4())}
+            >
               Generate
             </button>
-            <button className="btn btn-outline-danger btn-sm" type="button">Copy</button>
+            <button className="btn btn-outline-danger btn-sm" type="button">
+              Copy
+            </button>
           </div>
         </div>
       </div>
-      <button type="submit" className="mt-4 btn-primary btn-block form-control" onClick={handleCreateRoom}>
-          Generate Room
+      <button type="submit" className="mt-4 btn-primary btn-block form-control">
+        Generate Room
       </button>
     </form>
   );
