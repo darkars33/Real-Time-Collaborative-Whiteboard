@@ -6,8 +6,17 @@ import { FaLongArrowAltRight } from "react-icons/fa";
 import { GoPencil } from "react-icons/go";
 import { IoMdDownload } from "react-icons/io";
 import { FaShare } from "react-icons/fa";
-import { Arrow, Circle, Layer, Line, Rect, Stage, Transformer } from "react-konva";
+import {
+  Arrow,
+  Circle,
+  Layer,
+  Line,
+  Rect,
+  Stage,
+  Transformer,
+} from "react-konva";
 import { v4 as uuidv4 } from "uuid";
+import CurrentUser from "../Components/CurrentUser/CurrentUser";
 
 const Whiteboard = () => {
   const [color, setColor] = useState<string>("#000000");
@@ -86,9 +95,9 @@ const Whiteboard = () => {
             id,
             points: [x, y],
             fillColor: color,
-          }
+          },
         ]);
-        break;  
+        break;
     }
   };
 
@@ -141,16 +150,17 @@ const Whiteboard = () => {
         );
         break;
       case "pencil":
-        setPencil((pen) => pen.map((p) =>{
-          if(p.id === currentShapeId.current){
-            return{
-              ...p,
-              points: [...p.points, x, y],
-            };
-          }
-          return p;
-        }))  
-
+        setPencil((pen) =>
+          pen.map((p) => {
+            if (p.id === currentShapeId.current) {
+              return {
+                ...p,
+                points: [...p.points, x, y],
+              };
+            }
+            return p;
+          })
+        );
     }
   };
 
@@ -163,7 +173,7 @@ const Whiteboard = () => {
     if (action !== "cursor") return;
     const target = e.currentTarget;
     transformerRef.current.nodes([target]);
-  }
+  };
 
   const handleExport = () => {
     const uri = stageRef.current?.toDataURL();
@@ -176,157 +186,161 @@ const Whiteboard = () => {
   };
 
   return (
-    <div className="vw-100 vh-100 p-2  position-relative d-flex justify-content-center align-items-start overflow-hidden">
-      <div
-        className="p-md-4 bg-transparent"
-        style={{ position: "fixed", top: "20px", zIndex: 10 }}
-        draggable={isDragable}
-      >
-        <div
-          className="d-flex justify-content-between p-2 rounded-lg shadow gap-2 flex-wrap"
-          style={{ border: "1px solid gray" }}
-        >
-          <GiArrowCursor
-            className={`mx-2 mx-md-3 p-1 rounded ${
-              action === "cursor" ? "bg-primary" : ""
-            }`}
-            size={30}
-            onClick={() => setAction("cursor")}
-            style={{ cursor: "pointer" }}
-          />
-          <RiRectangleLine
-            className={`mx-2 mx-md-3 p-1 rounded ${
-              action === "rectangle" ? "bg-primary" : ""
-            }`}
-            size={30}
-            onClick={() => setAction("rectangle")}
-            style={{ cursor: "pointer" }}
-          />
-          <FiCircle
-            className={`mx-2 mx-md-3 p-1 rounded ${
-              action === "circle" ? "bg-primary" : ""
-            }`}
-            size={30}
-            onClick={() => setAction("circle")}
-            style={{ cursor: "pointer" }}
-          />
-          <FaLongArrowAltRight
-            className={`mx-2 mx-md-3 p-1 rounded ${
-              action === "arrow" ? "bg-primary" : ""
-            }`}
-            size={30}
-            onClick={() => setAction("arrow")}
-            style={{ cursor: "pointer" }}
-          />
-          <GoPencil
-            className={`mx-2 mx-md-3 p-1 rounded ${
-              action === "pencil" ? "bg-primary" : ""
-            }`}
-            size={30}
-            onClick={() => setAction("pencil")}
-            style={{ cursor: "pointer" }}
-          />
-          <input
-            type="color"
-            style={{ width: "25px", marginLeft: "15px", cursor: "pointer" }}
-            value={color}
-            onChange={(e) => setColor(e.target.value)}
-          />
-          <IoMdDownload
-            className="mx-2 mx-md-3 p-1 rounded"
-            size={30}
-            style={{ cursor: "pointer" }}
-            onClick={handleExport}
-          />
-        </div>
-      </div>
-      <div
-        className="p-2 bg-primary position-absolute rounded-lg"
-        style={{ top: 20, right: 40, cursor: "pointer", zIndex: 10 }}
-      >
-        <FaShare size={30} className="text-white" />
-      </div>
+    <div className="vw-100 vh-100 p-2 position-relative d-flex justify-content-center align-items-start overflow-hidden">
+  <div
+    className="p-md-4 bg-transparent"
+    style={{ position: "fixed", top: "20px", zIndex: 10 }}
+    draggable={isDragable}
+  >
+    <div
+      className="d-flex justify-content-between p-2 rounded-lg shadow gap-2 flex-wrap"
+      style={{ border: "1px solid gray" }}
+    >
+      <GiArrowCursor
+        className={`mx-2 mx-md-3 p-1 rounded ${
+          action === "cursor" ? "bg-primary" : ""
+        }`}
+        size={30}
+        onClick={() => setAction("cursor")}
+        style={{ cursor: "pointer" }}
+      />
+      <RiRectangleLine
+        className={`mx-2 mx-md-3 p-1 rounded ${
+          action === "rectangle" ? "bg-primary" : ""
+        }`}
+        size={30}
+        onClick={() => setAction("rectangle")}
+        style={{ cursor: "pointer" }}
+      />
+      <FiCircle
+        className={`mx-2 mx-md-3 p-1 rounded ${
+          action === "circle" ? "bg-primary" : ""
+        }`}
+        size={30}
+        onClick={() => setAction("circle")}
+        style={{ cursor: "pointer" }}
+      />
+      <FaLongArrowAltRight
+        className={`mx-2 mx-md-3 p-1 rounded ${
+          action === "arrow" ? "bg-primary" : ""
+        }`}
+        size={30}
+        onClick={() => setAction("arrow")}
+        style={{ cursor: "pointer" }}
+      />
+      <GoPencil
+        className={`mx-2 mx-md-3 p-1 rounded ${
+          action === "pencil" ? "bg-primary" : ""
+        }`}
+        size={30}
+        onClick={() => setAction("pencil")}
+        style={{ cursor: "pointer" }}
+      />
+      <input
+        type="color"
+        style={{ width: "25px", marginLeft: "15px", cursor: "pointer" }}
+        value={color}
+        onChange={(e) => setColor(e.target.value)}
+      />
+      <IoMdDownload
+        className="mx-2 mx-md-3 p-1 rounded"
+        size={30}
+        style={{ cursor: "pointer" }}
+        onClick={handleExport}
+      />
+    </div>
+  </div>
+  <div
+    className="p-2 bg-primary position-absolute rounded-lg"
+    style={{ top: 20, right: 40, cursor: "pointer", zIndex: 10 }}
+  >
+    <FaShare size={30} className="text-white" />
+  </div>
 
-      <Stage
-        ref={stageRef}
+  <Stage
+    ref={stageRef}
+    width={window.innerWidth}
+    height={window.innerHeight}
+    onPointerMove={onPointerMove}
+    onPointerDown={onPointerDown}
+    onPointerUp={onPointerUp}
+  >
+    <Layer>
+      <Rect
+        x={0}
+        y={0}
         width={window.innerWidth}
         height={window.innerHeight}
-        onPointerMove={onPointerMove}
-        onPointerDown={onPointerDown}
-        onPointerUp={onPointerUp}
-      >
-        <Layer>
-          <Rect
-            x={0}
-            y={0}
-            width={window.innerWidth}
-            height={window.innerHeight}
-            fill="#fff"
-            id="bg"
-            draggable={isDragable}
-            onClick={() => transformerRef.current.nodes([])}
-          />
+        fill="#fff"
+        id="bg"
+        draggable={isDragable}
+        onClick={() => transformerRef.current.nodes([])}
+      />
 
-          {rectangles.map((rect) => (
-            <Rect
-              key={rect.id}
-              x={rect.x}
-              y={rect.y}
-              stroke={strokeColor}
-              strokeWidth={2}
-              fill={rect.fillColor}
-              height={rect.height}
-              width={rect.width}
-              draggable={isDragable}
-              onClick={handleClick}
-            />
-          ))}
+      {rectangles.map((rect) => (
+        <Rect
+          key={rect.id}
+          x={rect.x}
+          y={rect.y}
+          stroke={strokeColor}
+          strokeWidth={2}
+          fill={rect.fillColor}
+          height={rect.height}
+          width={rect.width}
+          draggable={isDragable}
+          onClick={handleClick}
+        />
+      ))}
 
-          {circles.map((cir) => (
-            <Circle
-              key={cir.id}
-              x={cir.x}
-              y={cir.y}
-              radius={cir.radius}
-              stroke={strokeColor}
-              strokeWidth={2}
-              fill={cir.fillColor}
-              draggable={isDragable}
-              onClick={handleClick}
-            />
-          ))}
+      {circles.map((cir) => (
+        <Circle
+          key={cir.id}
+          x={cir.x}
+          y={cir.y}
+          radius={cir.radius}
+          stroke={strokeColor}
+          strokeWidth={2}
+          fill={cir.fillColor}
+          draggable={isDragable}
+          onClick={handleClick}
+        />
+      ))}
 
-          {arrows.map((arr) => (
-            <Arrow
-              key={arr.id}
-              points={arr.points}
-              stroke={strokeColor}
-              strokeWidth={2}
-              fill={arr.fillColor}
-              draggable={isDragable}
-              onClick={handleClick}
-            />
-          ))}
+      {arrows.map((arr) => (
+        <Arrow
+          key={arr.id}
+          points={arr.points}
+          stroke={strokeColor}
+          strokeWidth={2}
+          fill={arr.fillColor}
+          draggable={isDragable}
+          onClick={handleClick}
+        />
+      ))}
 
-          {pencil.map((pen) => (
-            <Line
-              key={pen.id}
-              lineCap="round"
-              lineJoin="round"
-              points={pen.points}
-              stroke={strokeColor}
-              strokeWidth={2}
-              fill={pen.fillColor}
-              draggable={isDragable}
-              onClick={handleClick}
-            />
-          ))}
+      {pencil.map((pen) => (
+        <Line
+          key={pen.id}
+          lineCap="round"
+          lineJoin="round"
+          points={pen.points}
+          stroke={strokeColor}
+          strokeWidth={2}
+          fill={pen.fillColor}
+          draggable={isDragable}
+          onClick={handleClick}
+        />
+      ))}
 
-          <Transformer ref={transformerRef} />
+      <Transformer ref={transformerRef} />
+    </Layer>
+  </Stage>
 
-        </Layer>
-      </Stage>
-    </div>
+  <div className="position-absolute" style={{ left: 20 }}>
+    <CurrentUser />
+  </div>
+</div>
+
   );
 };
 
