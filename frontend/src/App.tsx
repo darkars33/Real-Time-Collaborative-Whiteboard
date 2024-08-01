@@ -1,27 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import Whiteboard from './Pages/Whiteboard';
 import Form from './Pages/Form';
 import { v4 as uuidv4 } from 'uuid';
 import io, { Socket } from 'socket.io-client';
+import { ReactKeycloakProvider } from '@react-keycloak/web';
+import keycloak from './keycloak';
+import PrivateRoute from './Helper/PrivateRoute';
 
 const server = "http://localhost:3000";
 
-const connectionOptions: {
-  "force new connection": boolean;
-  reconnectionAttempts: string;
-  timeout: number;
-  transports: string[];
-} = {
+const connectionOptions = {
   "force new connection": true,
-  reconnectionAttempts: "Infinity",
+  reconnectionAttempts:  Infinity,
   timeout: 10000,
   transports: ["websocket"],
 };
 
 const socket: Socket = io(server, connectionOptions);
+
+interface user {
+  name: string;
+  roomId: string;
+  userId: string;
+  host: boolean;
+  presenter: boolean;
+}
 
 interface User {
   name: string;
@@ -50,11 +56,14 @@ const App: React.FC = () => {
   }, []);
 
   return (
-      <Routes>
-        <Route path='/' element={<Form uniqueId={uniqueId} socket={socket} setUser={setUser} />} />
-        <Route path='/:roomId' element={<Whiteboard user={user} socket={socket} />} />
-      </Routes>
-    
+    <ReactKeycloakProvider authClient={keycloak}>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<Form uniqueId={uniqueId} socket={socket} setUser={setUser} />} />
+          <Route path='/:roomId' element={<PrivateRoute><Whiteboard user={user} socket={socket} /></PrivateRoute>} />
+        </Routes>
+      </BrowserRouter>
+    </ReactKeycloakProvider>
   );
 };
 

@@ -9,9 +9,12 @@ import CurrentUser from "../Components/CurrentUser/CurrentUser";
 import UserImage from "../Components/UserReflectBoard/UserImage";
 import Share from "../Components/Forms/Share";
 
-interface User {
+export interface User {
+  name: string;
   roomId: string;
-  presenter?: boolean;
+  userId: string;
+  host: boolean;
+  presenter: boolean;
 }
 
 interface WhiteboardProps {
@@ -35,6 +38,8 @@ const Whiteboard: React.FC<WhiteboardProps> = ({ user, socket }) => {
   const [currentUser, setCurrentUser] = useState<User>(user);
   const [showShare, setShowShare] = useState<boolean>(false);
   const [showUser, setShowUser] = useState<boolean>(false);
+
+  
 
   useEffect(() => {
     const storedUser = localStorage.getItem("currentUser");

@@ -1,6 +1,7 @@
 import React from "react";
 import JoinRoom from "../Components/Forms/JoinRoom";
 import CreateRoom from "../Components/Forms/CreateRoom";
+import Navbar from "../Components/Navbar/Navbar";
 
 interface FormProps {
   uniqueId: string;
@@ -18,7 +19,9 @@ interface User {
 
 const Form: React.FC<FormProps> = ({ uniqueId, socket, setUser }) => {
   return (
-    <div className="bg-light" style={{ width: "100vw", height: "100vh" }}>
+    <>
+    <div className="bg-light overflow-hidden" style={{ width: "100vw", height: "100vh" }}>
+    <Navbar />
       <div className=" container">
         <h1 className="text-center text-uppercase pt-5 mt-10">WellCome to the RTCWB</h1>
         <div className="row h-100 pt-5">
@@ -39,6 +42,7 @@ const Form: React.FC<FormProps> = ({ uniqueId, socket, setUser }) => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

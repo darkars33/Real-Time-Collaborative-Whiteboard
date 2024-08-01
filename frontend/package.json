@@ -10,14 +10,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@react-keycloak/web": "^3.4.0",
     "bootstrap": "^4.6.0",
+    "keycloak-js": "^25.0.2",
     "konva": "^9.3.14",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.4",
     "react-dom": "^18.3.1",
     "react-icons": "^5.2.1",
     "react-konva": "^18.2.10",
-    "react-router-dom": "^6.25.1",
+    "react-router-dom": "^6.26.0",
     "socket.io-client": "^4.7.5",
     "uuid": "^10.0.0"
   },
