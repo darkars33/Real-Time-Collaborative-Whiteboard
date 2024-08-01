@@ -18,7 +18,7 @@ export interface User {
 }
 
 interface WhiteboardProps {
-  user: User;
+  user: User | null;
   socket: any; 
 }
 
@@ -35,7 +35,7 @@ const Whiteboard: React.FC<WhiteboardProps> = ({ user, socket }) => {
   const [arrows, setArrows] = useState<Array<any>>([]);
   const [pencil, setPencil] = useState<Array<any>>([]);
   const [img, setImg] = useState<string | null>(null);
-  const [currentUser, setCurrentUser] = useState<User>(user);
+  const [currentUser, setCurrentUser] = useState<User | null>(user);
   const [showShare, setShowShare] = useState<boolean>(false);
   const [showUser, setShowUser] = useState<boolean>(false);
 

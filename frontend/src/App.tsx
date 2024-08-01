@@ -21,13 +21,6 @@ const connectionOptions = {
 
 const socket: Socket = io(server, connectionOptions);
 
-interface user {
-  name: string;
-  roomId: string;
-  userId: string;
-  host: boolean;
-  presenter: boolean;
-}
 
 interface User {
   name: string;

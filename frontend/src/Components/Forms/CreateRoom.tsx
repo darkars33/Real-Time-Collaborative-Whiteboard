@@ -16,8 +16,7 @@ interface RoomData {
   presenter: boolean;
 }
 
-const CreateRoom: React.FC<CreateRoomProps> = ({ uniqueId, socket, setUser }) => {
-  const uniId= uuidv4();
+const CreateRoom: React.FC<CreateRoomProps> = ({ socket, setUser }) => {
   const [roomId, setRoomId] = useState<string>(uuidv4());
   const [name, setName] = useState<string>("");
   const navigate = useNavigate();
