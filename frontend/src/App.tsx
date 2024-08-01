@@ -50,12 +50,11 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <div>
       <Routes>
         <Route path='/' element={<Form uniqueId={uniqueId} socket={socket} setUser={setUser} />} />
         <Route path='/:roomId' element={<Whiteboard user={user} socket={socket} />} />
       </Routes>
-    </div>
+    
   );
 };
 

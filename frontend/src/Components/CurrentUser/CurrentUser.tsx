@@ -1,11 +1,19 @@
-import React from 'react'
+import React from 'react';
 
-const CurrentUser = () => {
-  return (
-    <div>
-      <h1>current User</h1>
-    </div>
-  )
+interface User {
+  name: string;
 }
 
-export default CurrentUser
+interface CurrentUserProps {
+  presentUser: User;
+}
+
+const CurrentUser: React.FC<CurrentUserProps> = ({ presentUser }) => {
+  return (
+    <div className='p-2 border rounded shadow gap-2 position-relative mt-2'>
+      <h1>{presentUser.name}</h1>
+    </div>
+  );
+}
+
+export default CurrentUser;

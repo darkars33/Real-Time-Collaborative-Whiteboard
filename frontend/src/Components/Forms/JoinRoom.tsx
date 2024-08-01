@@ -46,6 +46,7 @@ const JoinRoom: React.FC<JoinRoomProps> = ({ socket, setUser }) => {
           placeholder="Enter your name"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          required
         />
       </div>
       <div className="form-group">
@@ -56,12 +57,14 @@ const JoinRoom: React.FC<JoinRoomProps> = ({ socket, setUser }) => {
             placeholder="Enter room code"
             value={roomId}
             onChange={(e) => setRoomId(e.target.value)}
+            required
           />
         </div>
       </div>
       <button
         type="submit"
-        className="mt-4 btn-primary btn-block form-control"
+        className="mt-4 btn-primary btn-block form-control border-0 text-white"
+        style={{backgroundColor: "#c29fff"}}
       >
         Join Room
       </button>

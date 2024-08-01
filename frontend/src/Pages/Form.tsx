@@ -4,7 +4,7 @@ import CreateRoom from "../Components/Forms/CreateRoom";
 
 interface FormProps {
   uniqueId: string;
-  socket: any; 
+  socket: any;
   setUser: (user: User) => void;
 }
 
@@ -18,21 +18,24 @@ interface User {
 
 const Form: React.FC<FormProps> = ({ uniqueId, socket, setUser }) => {
   return (
-    <div className="container">
-      <div className="row h-100 pt-5">
-        <div
-          className="col-md-4 mt-5 border p-3 mx-auto rounded-2 border-2 d-flex flex-column align-items-center"
-          style={{ height: '400px' }}
-        >
-          <h1 className="text-primary font-weight-bold">Create Room</h1>
-          <CreateRoom uniqueId={uniqueId} socket={socket} setUser={setUser} />
-        </div>
-        <div
-          className="col-md-4 mt-5 border p-3 mx-auto rounded-2 border-2 d-flex flex-column align-items-center"
-          style={{ height: '400px' }}
-        >
-          <h1 className="text-primary font-weight-bold">Join Room</h1>
-          <JoinRoom socket={socket} setUser={setUser} />
+    <div className="bg-light" style={{ width: "100vw", height: "100vh" }}>
+      <div className=" container">
+        <h1 className="text-center text-uppercase pt-5 mt-10">WellCome to the RTCWB</h1>
+        <div className="row h-100 pt-5">
+          <div
+            className="col-md-4 mt-5 bg-white border p-3 mx-auto rounded-2 border-2 d-flex flex-column align-items-center border rounded shadow gap-2"
+            style={{ height: "400px" }}
+          >
+            <h1 className="font-weight-bold" style={{color: "#c29fff"}}>Create Room</h1>
+            <CreateRoom uniqueId={uniqueId} socket={socket} setUser={setUser} />
+          </div>
+          <div
+            className="col-md-4 mt-5 bg-white border p-3 mx-auto rounded-2 border-2 d-flex flex-column align-items-center border rounded shadow gap-2"
+            style={{ height: "400px" }}
+          >
+            <h1 className="font-weight-bold" style={{color: "#c29fff"}}>Join Room</h1>
+            <JoinRoom socket={socket} setUser={setUser} />
+          </div>
         </div>
       </div>
     </div>

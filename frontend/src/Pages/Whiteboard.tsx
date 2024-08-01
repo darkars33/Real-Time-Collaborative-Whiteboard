@@ -1,55 +1,70 @@
 import React, { useState, useRef, useEffect } from "react";
-import { GiArrowCursor } from "react-icons/gi";
-import { RiRectangleLine } from "react-icons/ri";
-import { FiCircle } from "react-icons/fi";
-import { FaLongArrowAltRight } from "react-icons/fa";
+import { PiCursorLight, PiRectangleLight, PiCircleThin, PiArrowLeft } from "react-icons/pi";
+import { IoIosClose, IoMdDownload } from "react-icons/io";
+import { RiUserShared2Fill } from "react-icons/ri";
 import { GoPencil } from "react-icons/go";
-import { IoMdDownload } from "react-icons/io";
-import { FaShare } from "react-icons/fa";
-import {
-  Arrow,
-  Circle,
-  Layer,
-  Line,
-  Rect,
-  Stage,
-  Transformer,
-} from "react-konva";
+import { Arrow, Circle, Layer, Line, Rect, Stage, Transformer } from "react-konva";
 import { v4 as uuidv4 } from "uuid";
 import CurrentUser from "../Components/CurrentUser/CurrentUser";
+import UserImage from "../Components/UserReflectBoard/UserImage";
+import Share from "../Components/Forms/Share";
 
-const Whiteboard = ({ user, socket }) => {
+interface User {
+  roomId: string;
+  presenter?: boolean;
+}
+
+interface WhiteboardProps {
+  user: User;
+  socket: any; 
+}
+
+const Whiteboard: React.FC<WhiteboardProps> = ({ user, socket }) => {
   const [color, setColor] = useState<string>("#000000");
   const strokeColor = "#000000";
-  const isPainting = useRef<boolean>();
-  const currentShapeId = useRef<string | undefined>();
+  const isPainting = useRef<boolean>(false);
+  const currentShapeId = useRef<string | undefined>(undefined);
   const transformerRef = useRef<any>(null);
-  console.log(color);
-
   const [action, setAction] = useState<string>("cursor");
 
-  const [rectangles, setRectangles] = useState<any[]>([]);
-  const [circles, setCircles] = useState<any[]>([]);
-  const [arrows, setArrows] = useState<any[]>([]);
-  const [pencil, setPencil] = useState<any[]>([]);
-  const [img, setImg] = useState<any>(null);
+  const [rectangles, setRectangles] = useState<Array<any>>([]);
+  const [circles, setCircles] = useState<Array<any>>([]);
+  const [arrows, setArrows] = useState<Array<any>>([]);
+  const [pencil, setPencil] = useState<Array<any>>([]);
+  const [img, setImg] = useState<string | null>(null);
+  const [currentUser, setCurrentUser] = useState<User>(user);
+  const [showShare, setShowShare] = useState<boolean>(false);
+  const [showUser, setShowUser] = useState<boolean>(false);
 
   useEffect(() => {
-    socket.on("whiteBoardDataResponse", (data) => {
+    const storedUser = localStorage.getItem("currentUser");
+    if (storedUser) {
+      setCurrentUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (currentUser) {
+      localStorage.setItem("currentUser", JSON.stringify(currentUser));
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
+    socket.on("whiteBoardDataResponse", (data: { imgURL: string }) => {
       setImg(data.imgURL);
     });
 
-    socket.on("updateImage", (imageURL) => {
+    socket.on("updateImage", (imageURL: string) => {
       setImg(imageURL);
     });
-  }, []);
+  }, [socket]);
 
   const isDragable = action === "cursor";
 
   const stageRef = useRef<any>(null);
   const [dimensions, setDimensions] = useState({
-    width: 1500,
-    height: 760,
+    width: window.innerWidth,
+    height: window.innerHeight,
   });
 
   const onPointerDown = () => {
@@ -57,7 +72,6 @@ const Whiteboard = ({ user, socket }) => {
 
     const stage = stageRef.current;
     const { x, y } = stage.getPointerPosition();
-
     const id = uuidv4();
 
     currentShapeId.current = id;
@@ -133,14 +147,13 @@ const Whiteboard = ({ user, socket }) => {
           })
         );
         break;
-
       case "circle":
         setCircles((cir) =>
           cir.map((c) => {
             if (c.id === currentShapeId.current) {
               return {
                 ...c,
-                radius: ((y - c.y) ** 2 + (x - c.x) ** 2) ** 0.5,
+                radius: Math.sqrt((y - c.y) ** 2 + (x - c.x) ** 2),
               };
             }
             return c;
@@ -191,9 +204,9 @@ const Whiteboard = ({ user, socket }) => {
 
   const handleExport = () => {
     const uri = stageRef.current?.toDataURL();
-    var link = document.createElement("a");
+    const link = document.createElement("a");
     link.download = "image.png";
-    link.href = uri;
+    link.href = uri || "";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -207,80 +220,84 @@ const Whiteboard = ({ user, socket }) => {
       }
     }, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [socket]);
 
   return (
     <>
-      {user?.presenter && (
-        <div className="vw-100 vh-100 p-2 position-relative d-flex justify-content-center align-items-start overflow-hidden">
+      {currentUser?.presenter && (
+        <div className="vw-100 vh-100 position-relative d-flex justify-content-center align-items-start overflow-hidden">
           <div
             className="p-md-4 bg-transparent"
-            style={{ position: "fixed", top: "20px", zIndex: 10 }}
+            style={{ position: "fixed", zIndex: 10, top: 0 }}
             draggable={isDragable}
           >
             <div
-              className="d-flex justify-content-between p-2 rounded-lg shadow gap-2 flex-wrap"
-              style={{ border: "1px solid gray" }}
+              className="d-flex justify-content-between border p-2 shadow gap-2 flex-wrap align-items-center"
+              style={{ borderRadius: "10px" }}
             >
-              <GiArrowCursor
-                className={`mx-2 mx-md-3 p-1 rounded ${
-                  action === "cursor" ? "bg-primary" : ""
-                }`}
+              <PiCursorLight
+                className={`mx-2 mx-md-3 p-2 rounded`}
                 size={30}
                 onClick={() => setAction("cursor")}
-                style={{ cursor: "pointer" }}
+                style={{
+                  cursor: "pointer",
+                  backgroundColor: `${action === "cursor" ? "#eadbf6" : ""}`,
+                }}
               />
-              <RiRectangleLine
-                className={`mx-2 mx-md-3 p-1 rounded ${
-                  action === "rectangle" ? "bg-primary" : ""
-                }`}
+              <PiRectangleLight
+                className={`mx-2 mx-md-3 p-2 rounded`}
                 size={30}
                 onClick={() => setAction("rectangle")}
-                style={{ cursor: "pointer" }}
+                style={{
+                  cursor: "pointer",
+                  backgroundColor: `${action === "rectangle" ? "#eadbf6" : ""}`,
+                }}
               />
-              <FiCircle
-                className={`mx-2 mx-md-3 p-1 rounded ${
-                  action === "circle" ? "bg-primary" : ""
-                }`}
-                size={30}
+              <PiCircleThin
+                className={`mx-2 mx-md-3 p-2 rounded`}
+                size={33}
                 onClick={() => setAction("circle")}
-                style={{ cursor: "pointer" }}
+                style={{
+                  cursor: "pointer",
+                  backgroundColor: `${action === "circle" ? "#eadbf6" : ""}`,
+                }}
               />
-              <FaLongArrowAltRight
-                className={`mx-2 mx-md-3 p-1 rounded ${
-                  action === "arrow" ? "bg-primary" : ""
-                }`}
+              <PiArrowLeft
+                className={`mx-2 mx-md-3 p-1 rounded`}
                 size={30}
                 onClick={() => setAction("arrow")}
-                style={{ cursor: "pointer" }}
+                style={{
+                  cursor: "pointer",
+                  backgroundColor: `${action === "arrow" ? "#eadbf6" : ""}`,
+                }}
               />
               <GoPencil
-                className={`mx-2 mx-md-3 p-1 rounded ${
-                  action === "pencil" ? "bg-primary" : ""
-                }`}
+                className={`mx-2 mx-md-3 p-2 rounded`}
                 size={30}
                 onClick={() => setAction("pencil")}
-                style={{ cursor: "pointer" }}
+                style={{
+                  cursor: "pointer",
+                  backgroundColor: `${action === "pencil" ? "#eadbf6" : ""}`,
+                }}
               />
               <input
                 type="color"
-                style={{ width: "25px", marginLeft: "15px", cursor: "pointer" }}
+                style={{
+                  width: "20px",
+                  height: "20px",
+                  marginLeft: "15px",
+                  cursor: "pointer",
+                }}
                 value={color}
                 onChange={(e) => setColor(e.target.value)}
               />
               <IoMdDownload
-                className="mx-2 mx-md-3 p-1 rounded"
+                className="mx-2 mx-md-3 p-2 rounded"
                 size={30}
                 style={{ cursor: "pointer" }}
                 onClick={handleExport}
               />
             </div>
-          </div>
-          <div
-            className="p-2 bg-primary position-absolute rounded-lg"
-            style={{ top: 20, right: 40, cursor: "pointer", zIndex: 10 }}
-          >
-            <FaShare size={30} className="text-white" />
           </div>
 
           <Stage
@@ -290,7 +307,6 @@ const Whiteboard = ({ user, socket }) => {
             onPointerMove={onPointerMove}
             onPointerDown={onPointerDown}
             onPointerUp={onPointerUp}
-            className="bg-dark"
           >
             <Layer>
               <Rect
@@ -362,22 +378,46 @@ const Whiteboard = ({ user, socket }) => {
             </Layer>
           </Stage>
 
-          <div className="position-absolute" style={{ left: 20 }}>
-            <CurrentUser />
-          </div>
-        </div>
-      )}
-      {!user?.presenter && (
-        <div className="overflow-hidden d-flex justify-content-center align-items-center" style={{ height: "100vh", width: "100vw" }}>
-          <div className="border border-dark border-3 p-1 overflow-hidden" style={{ height: "98%", width: "98%" }}>
-            <img
-              src={img}
-              alt="real time white board image"
-              className="w-100 h-100"
+          <button
+            className="p-2 position-absolute rounded-lg border-0 text-white share-button"
+            style={{
+              top: 20,
+              right: 40,
+              cursor: "pointer",
+              zIndex: 10,
+              backgroundColor: "#c29fff",
+            }}
+            onClick={() => setShowShare(!showShare)}
+          >
+            share
+          </button>
+
+          {showShare && (
+            <div className="p-2 position-absolute" style={{ top: "10%", right: 10, zIndex: 1000 }}>
+              <div className="p-2 border rounded position-relative border p-2 shadow gap-2">
+                <IoIosClose
+                  className="position-absolute"
+                  size={30}
+                  style={{ right: 10, cursor: "pointer", zIndex: 10 }}
+                  onClick={() => setShowShare(false)}
+                />
+                <Share shareId={currentUser.roomId} />
+              </div>
+            </div>
+          )}
+
+          <div className="position-absolute" style={{ left: 20, top: 30 }}>
+            <RiUserShared2Fill
+              className="p-1 border text-white"
+              size={35}
+              style={{ backgroundColor: "#c29fff", borderRadius: "10px" }}
+              onClick={() => setShowUser(!showUser)}
             />
+            {showUser && <CurrentUser presentUser={currentUser} />}
           </div>
         </div>
       )}
+      {!currentUser?.presenter && <UserImage img={img} />}
     </>
   );
 };

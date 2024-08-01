@@ -49,6 +49,7 @@ const CreateRoom: React.FC<CreateRoomProps> = ({ uniqueId, socket, setUser }) =>
           placeholder="Enter your name"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          required
         />
       </div>
       <div className="form-group">
@@ -62,19 +63,20 @@ const CreateRoom: React.FC<CreateRoomProps> = ({ uniqueId, socket, setUser }) =>
           />
           <div className="input-group-append d-flex gap-1">
             <button
-              className="btn btn-primary btn-sm"
+              className="btn btn-sm text-white"
               type="button"
+              style={{backgroundColor: "#c29fff"}}
               onClick={() => setRoomId(uuidv4())}
             >
               Generate
             </button>
-            <button className="btn btn-outline-danger btn-sm" type="button">
+            <button className="btn btn-outline-success btn-sm" type="button">
               Copy
             </button>
           </div>
         </div>
       </div>
-      <button type="submit" className="mt-4 btn-primary btn-block form-control">
+      <button type="submit" className="mt-4 text-white btn-block form-control" style={{backgroundColor: "#c29fff"}}>
         Generate Room
       </button>
     </form>
