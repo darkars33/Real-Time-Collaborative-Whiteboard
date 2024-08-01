@@ -6,22 +6,25 @@
 .toolbar {
   position: fixed;
   z-index: 10;
-  top: 0;
+  top: 30px;
+  left: 20px;
 }
 
 .share-button {
-  top: 20px;
+  top: 30px;
   right: 40px;
+  background-color: black;
 }
 
 @media (max-width: 768px) {
   .toolbar {
-    bottom: 0;
+    bottom: 30px;
     top: auto;
 
   }
 
   .share-button {
-    bottom: 0;
+    top: auto;
+    bottom: 30px;
   }
 }

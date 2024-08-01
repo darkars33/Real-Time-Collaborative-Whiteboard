@@ -386,8 +386,6 @@ const Whiteboard: React.FC<WhiteboardProps> = ({ user, socket }) => {
           <button
             className="p-2 position-absolute rounded-lg border-0 text-white share-button"
             style={{
-              top: 20,
-              right: 40,
               cursor: "pointer",
               zIndex: 10,
               backgroundColor: "#c29fff",
@@ -411,7 +409,7 @@ const Whiteboard: React.FC<WhiteboardProps> = ({ user, socket }) => {
             </div>
           )}
 
-          <div className="position-absolute" style={{ left: 20, top: 30 }}>
+          <div className="position-absolute toolbar">
             <RiUserShared2Fill
               className="p-1 border text-white"
               size={35}
