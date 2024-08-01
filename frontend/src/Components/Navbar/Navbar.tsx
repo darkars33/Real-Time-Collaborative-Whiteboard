@@ -2,7 +2,7 @@ import React from "react";
 import { useKeycloak } from "@react-keycloak/web";
 
 const Navbar: React.FC = () => {
-  const { keycloak, initialized } = useKeycloak();
+  const { keycloak} = useKeycloak();
 
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">

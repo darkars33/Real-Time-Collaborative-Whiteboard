@@ -67,10 +67,6 @@ const Whiteboard: React.FC<WhiteboardProps> = ({ user, socket }) => {
   const isDragable = action === "cursor";
 
   const stageRef = useRef<any>(null);
-  const [dimensions, setDimensions] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  });
 
   const onPointerDown = () => {
     if (action === "cursor") return;
