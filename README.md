@@ -66,7 +66,6 @@ Keycloak will be accessible at http://localhost:8080.
 6.Navigate to the backend directory:
     ```bash
     cd backend
-
     ```
 7.Install dependencies:
 
