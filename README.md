@@ -62,13 +62,14 @@ Keycloak will be accessible at http://localhost:8080.
 5. Start the frontend application:
      ```bash
      npm run dev
-      ```
+     ```
+     
 6.Navigate to the backend directory:
-    ```bash
-    cd backend
-    ```
+      ```bash
+       cd backend
+       
+    
 7.Install dependencies:
-
   ```bash
   npm install
   ```
