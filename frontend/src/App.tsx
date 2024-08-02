@@ -10,7 +10,7 @@ import { ReactKeycloakProvider } from '@react-keycloak/web';
 import keycloak from './keycloak';
 import PrivateRoute from './Helper/PrivateRoute';
 
-const server = "https://backend-cyan-theta.vercel.app/";
+const server = "http://localhost:3000";
 
 const connectionOptions = {
   "force new connection": true,
